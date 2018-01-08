@@ -4,10 +4,9 @@ public class Player {
 	private String name;
 	private String colorsign;
 	
-	public Player(String name, String colorsign) {
+	public Player(String name) {
 		
 		this.setName(name);
-		this.setColorsign(colorsign);
 		
 	}
 
