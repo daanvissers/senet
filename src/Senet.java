@@ -44,7 +44,36 @@ public class Senet {
 	
 	private void playGame(String mode) {
 		
-		// board.print();
+		// First determine who starts first
+		determineStarter();
+		
+		// Set the pieces, taking the starter into consideration
+		board.setPieces(determineStarter());
+		
+		// Print the board
+		board.print();
+		
+	}
+	
+	private int determineStarter() {
+		
+		boolean decided = false;
+		int turn = 0, n = 0;
+		while(!decided) {
+			turn = switchTurn(turn);
+			n = dice.throwSticks();
+			System.out.println(players.get(turn).getName() + " has thrown " + n);
+			decided = (n == 1) ? true : false;
+		}
+		System.out.println(players.get(turn).getName() + " starts the game");
+		return turn;
+		
+	}
+	
+	public int switchTurn(int currentTurn) {
+		
+		int turn = (currentTurn == 0) ? 1 : 0;
+		return turn;
 		
 	}
 

@@ -5,9 +5,7 @@ public class Player {
 	private String colorsign;
 	
 	public Player(String name) {
-		
 		this.setName(name);
-		
 	}
 
 	public String getName() {

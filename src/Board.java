@@ -57,5 +57,37 @@ public class Board {
 		System.out.println("+----------+");
 		
 	}
+	
+	public void setPieces(int starter) {
+		
+		if(starter == 0) {
+			
+			squares.put("1", "o");
+			squares.put("3", "o");
+			squares.put("5", "o");
+			squares.put("7", "o");
+			squares.put("9", "o");
+			squares.put("2", "x");
+			squares.put("4", "x");
+			squares.put("6", "x");
+			squares.put("8", "x");
+			squares.put("11", "x");
+			
+		} else {
+			
+			squares.put("1", "x");
+			squares.put("3", "x");
+			squares.put("5", "x");
+			squares.put("7", "x");
+			squares.put("9", "x");
+			squares.put("2", "o");
+			squares.put("4", "o");
+			squares.put("6", "o");
+			squares.put("8", "o");
+			squares.put("11", "o");
+			
+		}
+		
+	}
 
 }
