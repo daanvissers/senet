@@ -58,34 +58,40 @@ public class Board {
 		
 	}
 	
-	public void setPieces(int starter) {
+	public void moveSecondPiece(Integer n, String sign) {		
+		Integer i = 30;
+		boolean finished = false;
+		while(!finished) {
+			Integer pos = 9 + n;
+			// If opponent's piece is on the spot, swap them
+			if(!squares.get(pos.toString()).equals(sign) && !squares.get(pos.toString()).equals(".")) {
+				squares.put(pos.toString(), sign);
+				if(sign.equals("x")) {
+					squares.put("9", "o");
+				} else {
+					squares.put("9", "x");
+				}
+				finished = true;
+			} else if (squares.get(pos.toString()).equals(".")) {
+				squares.put(pos.toString(), sign);
+				squares.put("9", ".");
+				finished = true;
+			}
+			i--;
+		}
+		print();
+	}
+	
+	public void setPieces() {
 		
-		if(starter == 0) {
-			
-			squares.put("1", "o");
-			squares.put("3", "o");
-			squares.put("5", "o");
-			squares.put("7", "o");
-			squares.put("9", "o");
-			squares.put("2", "x");
-			squares.put("4", "x");
-			squares.put("6", "x");
-			squares.put("8", "x");
-			squares.put("11", "x");
-			
-		} else {
-			
-			squares.put("1", "x");
-			squares.put("3", "x");
-			squares.put("5", "x");
-			squares.put("7", "x");
-			squares.put("9", "x");
-			squares.put("2", "o");
-			squares.put("4", "o");
-			squares.put("6", "o");
-			squares.put("8", "o");
-			squares.put("11", "o");
-			
+		for(Integer i = 1; i < 11; i+=2) {
+			squares.put(i.toString(), "o");
+			Integer x = i+1;
+			if(x == 10) {
+				squares.put("11", "x");
+			} else {
+				squares.put(x.toString(), "x");
+			}
 		}
 		
 	}

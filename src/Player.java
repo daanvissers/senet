@@ -2,7 +2,7 @@
 public class Player {
 	
 	private String name;
-	private String colorsign;
+	private String colorSign;
 	
 	public Player(String name) {
 		this.setName(name);
@@ -16,12 +16,12 @@ public class Player {
 		this.name = name;
 	}
 
-	public String getColorsign() {
-		return colorsign;
+	public String getColorSign() {
+		return colorSign;
 	}
 
-	public void setColorsign(String colorsign) {
-		this.colorsign = colorsign;
+	public void setColorSign(String colorSign) {
+		this.colorSign = colorSign;
 	}
 
 }

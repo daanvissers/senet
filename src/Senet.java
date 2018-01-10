@@ -5,6 +5,7 @@ public class Senet {
 	private Board board;
 	private ArrayList<Player> players;
 	private Dice dice;
+	private int turn;
 	
 	public Senet() {
 		
@@ -47,34 +48,55 @@ public class Senet {
 		// First determine who starts first
 		determineStarter();
 		
-		// Set the pieces, taking the starter into consideration
-		board.setPieces(determineStarter());
+		setColorSigns();
+		
+		// Set the pieces on the board
+		board.setPieces();
 		
 		// Print the board
 		board.print();
 		
+		// Do the second move
+		System.out.println(players.get(turn).getName() 
+				+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
+		Main.sc.nextLine();
+		Integer n = dice.throwSticks();
+		System.out.println(players.get(turn).getName() 
+				+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
+		board.moveSecondPiece(n, players.get(turn).getColorSign());
+		
+		// Repeat the process of the game
+		boolean gameFinished = false;
+		while(!gameFinished) {
+			
+			// Throw dice
+			// Do something on the board
+			// switchTurn();
+		}
+		
 	}
 	
-	private int determineStarter() {
+	private void determineStarter() {
 		
 		boolean decided = false;
-		int turn = 0, n = 0;
+		int n = 0;
 		while(!decided) {
-			turn = switchTurn(turn);
+			switchTurn();
 			n = dice.throwSticks();
 			System.out.println(players.get(turn).getName() + " has thrown " + n);
 			decided = (n == 1) ? true : false;
 		}
-		System.out.println(players.get(turn).getName() + " starts the game");
-		return turn;
-		
+		System.out.println(players.get(turn).getName() + " starts the game");		
 	}
 	
-	public int switchTurn(int currentTurn) {
-		
-		int turn = (currentTurn == 0) ? 1 : 0;
-		return turn;
-		
+	private void setColorSigns() {
+		players.get(turn).setColorSign("x");
+		switchTurn();
+		players.get(turn).setColorSign("o");
+	}
+	
+	private void switchTurn() {
+		turn = (turn == 0) ? 1 : 0;
 	}
 
 }
