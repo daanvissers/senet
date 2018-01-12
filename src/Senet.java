@@ -23,45 +23,53 @@ public class Senet {
 				+ "a normal game (0) or a test position (1-3)?");
 		String mode = Main.sc.nextLine();
 		
-		// Ask for player names
-		System.out.println("Enter the name of the first player:");
-		String p1name = Main.sc.nextLine();
-		
-		System.out.println("Enter the name of the second player:");
-		String p2name = Main.sc.nextLine();
-		
-		createGame(p1name, p2name);
+		String p1name = null, p2name = null;
+		if(mode.equals("0")) {
+			// Ask for player names
+			System.out.println("Enter the name of the first player:");
+			p1name = Main.sc.nextLine();
+			
+			System.out.println("Enter the name of the second player:");
+			p2name = Main.sc.nextLine();
+		}
+
+		createGame(mode, p1name, p2name);
 		
 		playGame(mode);
 		
 	}
 
-	private void createGame(String p1name, String p2name) {
-		
-		this.players.add(new Player(p1name));
-		this.players.add(new Player(p2name));
-		
+	private void createGame(String mode, String p1name, String p2name) {
+		switch(mode) {
+			case "0": this.players.add(new Player(p1name));
+					  this.players.add(new Player(p2name));
+					  break;
+			default:  this.players.add(new Player("black"));
+					  this.players.add(new Player("white"));
+					
+		}
+		setColorSigns();
 	}
 	
 	private void playGame(String mode) {
 		
-		// First determine who starts first
-		determineStarter();
-		
-		setColorSigns();
-		
 		// Set the pieces on the board
-		board.setPieces();
+		board.setPieces(mode);
 		
-		// Do the second move
-		System.out.println(players.get(turn).getName() 
-				+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
-		Main.sc.nextLine();
-		Integer n = dice.throwSticks();
-		System.out.println(players.get(turn).getName() 
-				+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
+		if(mode.equals("0")) {
+			// First determine who starts first
+			determineStarter();
+			
+			// Do the second move
+			System.out.println(players.get(turn).getName() 
+					+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
+			Main.sc.nextLine();
+			Integer n = dice.throwSticks();
+			System.out.println(players.get(turn).getName() 
+					+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
 
-		board.moveSecondPiece(n, players.get(turn).getColorSign());
+			board.moveSecondPiece(n, players.get(turn).getColorSign());
+		}
 		
 		switchTurn();
 		
@@ -106,7 +114,9 @@ public class Senet {
 			System.out.println(players.get(turn).getName() + " has thrown " + n);
 			decided = (n == 1) ? true : false;
 		}
-		System.out.println(players.get(turn).getName() + " starts the game");		
+		System.out.println(players.get(turn).getName() + " starts the game");
+		switchTurn();
+		board.print();
 	}
 	
 	private void setColorSigns() {

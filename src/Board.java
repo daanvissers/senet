@@ -82,7 +82,6 @@ public class Board {
 			System.out.println(squares.get(newPos.toString()));
 			System.out.println("One of your own pieces occupies square "+newPos);
 		}	
-		
 		print();
 	}
 	
@@ -106,8 +105,30 @@ public class Board {
 		print();
 	}
 	
-	public void setPieces() {
-		
+	public void setPieces(String mode) {
+		switch(mode) {
+			case "0": setMode0();
+				break;
+			case "1": setMode1();
+				break;
+			case "2": setMode2();
+				break;
+			case "3": setMode3();
+				break;
+			default: System.out.println("Error!");
+				break;
+		}
+	}
+	
+	// Returns the opposing sign of the given sign
+	private String opponentOf(String sign) {
+		String opponentSign;
+		opponentSign = (sign == "x") ? "o" : "x";
+		return opponentSign;
+	}
+	
+	// Game Test Modes
+	private void setMode0() {
 		for(Integer i = 1; i < 11; i+=2) {
 			squares.put(i.toString(), "o");
 			Integer x = i+1;
@@ -117,14 +138,35 @@ public class Board {
 				squares.put(x.toString(), "x");
 			}
 		}
+	}
+	
+	private void setMode1() {
+		String[] number = {"1", "2", "4", "6", "8", "10", "12", "14", 
+				"16", "17", "18", "20", "21", "23", "24", "25", "26" };
+		String[] symbol = {"x", "o", "o", "o", "x", "o", "o", "o", 
+				"x", "o", "o", "o", "o", "x", "o", "o", "o" };
+		for(int i = 0; i < 17; i++) {
+			squares.put(number[i], symbol[i]);
+		}
 		print();
 	}
 	
-	// Returns the opposing sign of the given sign
-	private String opponentOf(String sign) {
-		String opponentSign;
-		opponentSign = (sign == "x") ? "o" : "x";
-		return opponentSign;
+	private void setMode2() {
+		String[] number = {"22", "23", "24", "29" };
+		String[] symbol = {"o", "o", "o", "x"};
+		for(int i = 0; i < 4; i++) {
+			squares.put(number[i], symbol[i]);
+		}
+		print();
+	}
+	
+	private void setMode3() {
+		String[] number = {"6", "13", "18", "22", "25", "26", "28", "29" };
+		String[] symbol = {"o", "x", "o", "o", "x", "x", "x", "x"};
+		for(int i = 0; i < 8; i++) {
+			squares.put(number[i], symbol[i]);
+		}
+		print();
 	}
 
 }
