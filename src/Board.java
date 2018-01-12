@@ -61,13 +61,14 @@ public class Board {
 	public void movePiece(Integer m, Integer piece, String sign) {
 		
 		Integer newPos = m + piece;
-		System.out.println(sign+" Moves piecenr"+piece+" "+ m+ "steps, so to position "+newPos);
+		// System.out.println(sign+" Moves piecenr"+piece+" "+ m+ "steps, so to position "+newPos);
 		
 		boolean turnDone = false;
 		
 		// If square contains opponent, swap them
 		if(squares.get(newPos.toString()).equals(opponentOf(sign))) {
-			System.out.println("contains opponent");
+			// If two next to each other, cancel
+			// System.out.println("contains opponent");
 			squares.put(newPos.toString(), sign);
 			squares.put(piece.toString(), opponentOf(sign));
 		}
