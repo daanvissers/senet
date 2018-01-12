@@ -65,14 +65,19 @@ public class Board {
 		
 		boolean turnDone = false;
 		
-		// If square contains opponent, swap them
+		// If square contains opponent, swap them / RULE 2
 		if(squares.get(newPos.toString()).equals(opponentOf(sign))) {
-			// If two next to each other, cancel
-			// System.out.println("contains opponent");
-			squares.put(newPos.toString(), sign);
-			squares.put(piece.toString(), opponentOf(sign));
+			// If two next to each other, cancel / RULE 5
+			Integer a = (newPos-1), b = (newPos+1);
+			if(squares.get(a.toString()).equals(opponentOf(sign)) || squares.get(b.toString()).equals(opponentOf(sign))) {
+				System.out.println("Attack on safe piece: "+ newPos);
+				// Retry
+			} else {
+				squares.put(newPos.toString(), sign);
+				squares.put(piece.toString(), opponentOf(sign));
+			}
 		}
-		// If square contains nothing
+		// If square contains nothing / RULE 1
 		else if(squares.get(newPos.toString()).equals(".")) {
 			squares.put(newPos.toString(), sign);
 			squares.put(piece.toString(), ".");
@@ -82,6 +87,7 @@ public class Board {
 			System.out.println(sign);
 			System.out.println(squares.get(newPos.toString()));
 			System.out.println("One of your own pieces occupies square "+newPos);
+			// Retry
 		}	
 		print();
 	}
@@ -128,7 +134,7 @@ public class Board {
 		return opponentSign;
 	}
 	
-	// Game Test Modes
+	// Test Positions
 	private void setMode0() {
 		for(Integer i = 1; i < 11; i+=2) {
 			squares.put(i.toString(), "o");

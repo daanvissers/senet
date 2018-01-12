@@ -63,8 +63,8 @@ public class Senet {
 			// Do the second move
 			System.out.println(players.get(turn).getName() 
 					+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
-			Main.sc.nextLine();
-			Integer n = (Main.CHEAT) ? Integer.parseInt(Main.sc.nextLine()) : dice.throwSticks();
+			if(!Main.CHEAT) Main.sc.nextLine();
+			Integer n = (Main.CHEAT) ? n = Integer.parseInt(Main.sc.nextLine()) : dice.throwSticks();
 			System.out.println(players.get(turn).getName() 
 					+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
 
@@ -84,8 +84,8 @@ public class Senet {
 				// Throw dice
 				System.out.println(players.get(turn).getName() 
 						+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
-				Main.sc.nextLine();
-				Integer n = (Main.CHEAT) ? Integer.parseInt(Main.sc.nextLine()) : dice.throwSticks();
+				if(!Main.CHEAT) Main.sc.nextLine();
+				Integer n = (Main.CHEAT) ? n = Integer.parseInt(Main.sc.nextLine()) : dice.throwSticks();
 				
 				System.out.println(players.get(turn).getName() 
 						+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
