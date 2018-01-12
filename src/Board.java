@@ -65,8 +65,23 @@ public class Board {
 		
 		boolean turnDone = false;
 		
+		// If square is a trap / RULE 3
+		if(newPos == 27) {
+			System.out.println("It's a trap!");
+			boolean placed = false;
+			Integer begin = 1;
+			while(!placed) {
+				if(squares.get(begin.toString()).equals(".")) {
+					squares.put(begin.toString(), sign);
+					squares.put(piece.toString(), ".");
+					placed = !placed;
+				} else {
+					begin++;
+				}
+			}
+		}
 		// If square contains opponent, swap them / RULE 2
-		if(squares.get(newPos.toString()).equals(opponentOf(sign))) {
+		else if(squares.get(newPos.toString()).equals(opponentOf(sign))) {
 			// If two next to each other, cancel / RULE 5
 			Integer a = (newPos-1), b = (newPos+1);
 			if(squares.get(a.toString()).equals(opponentOf(sign)) || squares.get(b.toString()).equals(opponentOf(sign))) {
@@ -83,8 +98,6 @@ public class Board {
 			int jumpCount = 0;
 			for(Integer i = piece; i < newPos; i++) {
 				if(squares.get(i.toString()).equals(opponentOf(sign))) jumpCount++;
-				System.out.println(jumpCount);
-				System.out.println(i.toString());
 			}			
 			if(jumpCount >= 3) {
 				System.out.println("Attempt to jump over blockade");
