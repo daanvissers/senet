@@ -77,10 +77,23 @@ public class Board {
 				squares.put(piece.toString(), opponentOf(sign));
 			}
 		}
-		// If square contains nothing / RULE 1
+		// If square contains nothing
 		else if(squares.get(newPos.toString()).equals(".")) {
-			squares.put(newPos.toString(), sign);
-			squares.put(piece.toString(), ".");
+			// If jump over 3 opponent pieces / RULE 6
+			int jumpCount = 0;
+			for(Integer i = piece; i < newPos; i++) {
+				if(squares.get(i.toString()).equals(opponentOf(sign))) jumpCount++;
+				System.out.println(jumpCount);
+				System.out.println(i.toString());
+			}			
+			if(jumpCount >= 3) {
+				System.out.println("Attempt to jump over blockade");
+				// Retry
+			} else {
+				// Place piece on empty square / RULE 1
+				squares.put(newPos.toString(), sign);
+				squares.put(piece.toString(), ".");
+			}
 		}
 		// If one of your own pieces occupies square
 		else if (squares.get(newPos.toString()).equals(sign)) {
