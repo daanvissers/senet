@@ -58,19 +58,43 @@ public class Board {
 		
 	}
 	
+	public void movePiece(Integer m, Integer piece, String sign) {
+		
+		Integer newPos = m + piece;
+		System.out.println(sign+" Moves piecenr"+piece+" "+ m+ "steps, so to position "+newPos);
+		
+		boolean turnDone = false;
+		
+		// If square contains opponent, swap them
+		if(squares.get(newPos.toString()).equals(opponentOf(sign))) {
+			System.out.println("contains opponent");
+			squares.put(newPos.toString(), sign);
+			squares.put(piece.toString(), opponentOf(sign));
+		}
+		// If square contains nothing
+		else if(squares.get(newPos.toString()).equals(".")) {
+			squares.put(newPos.toString(), sign);
+			squares.put(piece.toString(), ".");
+		}
+		// If one of your own pieces occupies square
+		else if (squares.get(newPos.toString()).equals(sign)) {
+			System.out.println(sign);
+			System.out.println(squares.get(newPos.toString()));
+			System.out.println("One of your own pieces occupies square "+newPos);
+		}	
+		
+		print();
+	}
+	
 	public void moveSecondPiece(Integer n, String sign) {		
 		Integer i = 30;
 		boolean finished = false;
 		while(!finished) {
 			Integer pos = 9 + n;
-			// If opponent's piece is on the spot, swap them
+			// If square contains opponent, swap them
 			if(!squares.get(pos.toString()).equals(sign) && !squares.get(pos.toString()).equals(".")) {
 				squares.put(pos.toString(), sign);
-				if(sign.equals("x")) {
-					squares.put("9", "o");
-				} else {
-					squares.put("9", "x");
-				}
+				squares.put("9", opponentOf(sign));
 				finished = true;
 			} else if (squares.get(pos.toString()).equals(".")) {
 				squares.put(pos.toString(), sign);
@@ -93,7 +117,14 @@ public class Board {
 				squares.put(x.toString(), "x");
 			}
 		}
-		
+		print();
+	}
+	
+	// Returns the opposing sign of the given sign
+	private String opponentOf(String sign) {
+		String opponentSign;
+		opponentSign = (sign == "x") ? "o" : "x";
+		return opponentSign;
 	}
 
 }

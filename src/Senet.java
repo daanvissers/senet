@@ -53,9 +53,6 @@ public class Senet {
 		// Set the pieces on the board
 		board.setPieces();
 		
-		// Print the board
-		board.print();
-		
 		// Do the second move
 		System.out.println(players.get(turn).getName() 
 				+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
@@ -63,15 +60,38 @@ public class Senet {
 		Integer n = dice.throwSticks();
 		System.out.println(players.get(turn).getName() 
 				+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
+
 		board.moveSecondPiece(n, players.get(turn).getColorSign());
+		
+		switchTurn();
 		
 		// Repeat the process of the game
 		boolean gameFinished = false;
 		while(!gameFinished) {
 			
-			// Throw dice
-			// Do something on the board
-			// switchTurn();
+			// Repeat turns if 1,4,6 has been thrown
+			boolean turnFinished = false;
+			while(!turnFinished) {
+				
+				// Throw dice
+				System.out.println(players.get(turn).getName() 
+						+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
+				// Hack to cheat on the dice
+				Integer m = Integer.parseInt(Main.sc.nextLine());
+				//Integer m = dice.throwSticks();
+				
+				System.out.println(players.get(turn).getName() 
+						+ " (" + players.get(turn).getColorSign() + "), you have thrown " + m);
+				System.out.println(players.get(turn).getName() 
+						+ " (" + players.get(turn).getColorSign() + "), which piece do you want to move?" );
+				System.out.print("-> ");
+				Integer piece = Integer.parseInt(Main.sc.nextLine());
+				
+				board.movePiece(m, piece, players.get(turn).getColorSign());
+				
+				turnFinished = (m == 1 || m == 4 || m == 6) ? false : true;
+			}
+			switchTurn();
 		}
 		
 	}
