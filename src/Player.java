@@ -4,8 +4,14 @@ public class Player {
 	private String name;
 	private String colorSign;
 	
-	public Player(String name) {
+	public Player() {
+		// Empty constructor, for mode 0
+	}
+	
+	public Player(String name, String sign) {
+		// Constructor for mode 1, 2, 3
 		this.setName(name);
+		this.setColorSign(sign);
 	}
 
 	public String getName() {

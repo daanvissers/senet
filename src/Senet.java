@@ -41,46 +41,49 @@ public class Senet {
 
 	private void createGame(String mode, String p1name, String p2name) {
 		switch(mode) {
-			case "0": this.players.add(new Player(p1name));
-					  this.players.add(new Player(p2name));
+			case "0": this.players.add(new Player());
+					  this.players.add(new Player());
+					  initialMoves(p1name, p2name);
 					  break;
-			default:  this.players.add(new Player("black"));
-					  this.players.add(new Player("white"));
-					
+			default:  this.players.add(new Player("black", "x"));
+					  this.players.add(new Player("white", "o"));
+					  break;					
 		}
-		setColorSigns();
+	}
+	
+	private void initialMoves(String p1name, String p2name) {
+		
+		// First determine who starts first
+		determineStarter(p1name, p2name);
+		
+		// Set pieces on the board, and print
+		board.setPieces("0");
+		board.print();
+		
+		// Do the second move
+		System.out.println(players.get(turn).getName() 
+				+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
+		if(!Main.CHEAT) Main.sc.nextLine();
+		Integer n = (Main.CHEAT) ? n = Integer.parseInt(Main.sc.nextLine()) : dice.throwSticks();
+		System.out.println(players.get(turn).getName() 
+				+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
+
+		board.moveSecondPiece(n, players.get(turn).getColorSign());
+		switchTurn();
 	}
 	
 	private void playGame(String mode) {
 		
 		// Set the pieces on the board
-		board.setPieces(mode);
+		if(!mode.equals("0")) board.setPieces(mode);
 		
-		if(mode.equals("0")) {
-			// First determine who starts first
-			determineStarter();
-			
-			// Do the second move
-			System.out.println(players.get(turn).getName() 
-					+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
-			if(!Main.CHEAT) Main.sc.nextLine();
-			Integer n = (Main.CHEAT) ? n = Integer.parseInt(Main.sc.nextLine()) : dice.throwSticks();
-			System.out.println(players.get(turn).getName() 
-					+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
-
-			board.moveSecondPiece(n, players.get(turn).getColorSign());
-		}
+		// gameState: 0 == turn is not complete, 1 == turn is completed, 2 == game has been won
+		int gameState = 0;
 		
-		switchTurn();
-		
-		// Repeat the process of the game
-		boolean gameFinished = false;
-		while(!gameFinished) {
-			
-			// Repeat turns if 1,4,6 has been thrown
-			boolean turnFinished = false;
-			while(!turnFinished) {
-				
+		// While the game hasn't been won
+		while(gameState != 2) {
+			boolean throwAgain = true;
+			while(throwAgain) {
 				// Throw dice
 				System.out.println(players.get(turn).getName() 
 						+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
@@ -89,39 +92,59 @@ public class Senet {
 				
 				System.out.println(players.get(turn).getName() 
 						+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
-				System.out.println(players.get(turn).getName() 
-						+ " (" + players.get(turn).getColorSign() + "), which piece do you want to move?" );
-				System.out.print("-> ");
-				Integer piece = Integer.parseInt(Main.sc.nextLine());
 				
-				board.movePiece(n, piece, players.get(turn).getColorSign());
+				gameState = 0;
 				
-				turnFinished = (n == 1 || n == 4 || n == 6) ? false : true;
+				// While a turn is not complete
+				while(gameState == 0) {
+					
+					// Choose piece to move
+					System.out.println(players.get(turn).getName() 
+							+ " (" + players.get(turn).getColorSign() + "), which piece do you want to move?" );
+					System.out.print("-> ");
+					Integer piece = Integer.parseInt(Main.sc.nextLine());
+					
+					gameState = board.movePiece(n, piece, players.get(turn).getColorSign());
+				}
+				
+				board.print();
+				
+				// Decide if player can make another throw
+				if(gameState != 2) {
+					throwAgain = (n == 1 || n == 4 || n == 6) ? true : false;
+				} else {
+					throwAgain = false;
+				}
 			}
 			switchTurn();
 		}
-		
+		System.out.println("Congratulations, you've won!");
 	}
 	
-	private void determineStarter() {
+	private void determineStarter(String name1, String name2) {
 		
 		boolean decided = false;
+		boolean turnTaker = false;
 		int n = 0;
+		String name = "", nameOpponent = "";
 		while(!decided) {
-			switchTurn();
 			n = dice.throwSticks();
-			System.out.println(players.get(turn).getName() + " has thrown " + n);
-			decided = (n == 1) ? true : false;
+			name = (turnTaker) ? name2 : name1;
+			nameOpponent = (turnTaker) ? name1 : name2;
+			System.out.println(name + " has thrown " + n);
+			if(n==1) {
+				decided = true;
+				System.out.println(name + " starts the game");
+				players.get(0).setName(name);
+				players.get(0).setColorSign("x");
+				players.get(1).setName(nameOpponent);
+				players.get(1).setColorSign("o");
+			} else {
+				decided = false;
+				turnTaker =! turnTaker;
+			}
 		}
-		System.out.println(players.get(turn).getName() + " starts the game");
-		switchTurn();
-		board.print();
-	}
-	
-	private void setColorSigns() {
-		players.get(turn).setColorSign("x");
-		switchTurn();
-		players.get(turn).setColorSign("o");
+		if(players.get(turn).getColorSign().equals("x") ) switchTurn();
 	}
 	
 	private void switchTurn() {

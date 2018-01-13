@@ -58,15 +58,48 @@ public class Board {
 		
 	}
 	
-	public void movePiece(Integer m, Integer piece, String sign) {
+	public int movePiece(Integer m, Integer piece, String sign) {
 		
 		Integer newPos = m + piece;
-		// System.out.println(sign+" Moves piecenr"+piece+" "+ m+ "steps, so to position "+newPos);
 		
-		boolean turnDone = false;
-		
+		int turnStatus = 0;
+
+		// If you don't have a piece on the square
+		if(!squares.get(piece.toString()).equals(sign)) {
+			System.out.println("You don't have a piece on square "+piece);
+		}
+		// If all pieces are on last row, allow square 30 / RULE 8
+		else if(newPos == 30) {
+			boolean won = true;
+			for(Integer i=1; i<=20; i++) {
+				if(squares.get(i.toString()).equals(sign)) {
+					won = false;
+				}
+			}
+			if(won) {
+				// Check if the last row contains any pieces
+				int lastRowPieces = 0;
+				for(Integer i=21; i<=30; i++) {
+					if(squares.get(i.toString()).equals(sign)) lastRowPieces++;
+				}
+				if(lastRowPieces == 1) {
+					// Last piece lands on 30, so you win
+					turnStatus = 2;
+				} else {
+					// Remove piece from the board
+					squares.put(piece.toString(), ".");
+					turnStatus = 1;
+				}
+			} else {
+				turnStatus = 0;
+				System.out.println("Not all your pieces are on the final row");
+			}
+		} else if (newPos > 30) {
+			System.out.println("Illegal destination: "+newPos);
+			turnStatus = 0;
+		}
 		// If square is a trap / RULE 3
-		if(newPos == 27) {
+		else if(newPos == 27) {
 			System.out.println("It's a trap!");
 			boolean placed = false;
 			Integer begin = 1;
@@ -75,6 +108,7 @@ public class Board {
 					squares.put(begin.toString(), sign);
 					squares.put(piece.toString(), ".");
 					placed = !placed;
+					turnStatus = 1;
 				} else {
 					begin++;
 				}
@@ -86,10 +120,11 @@ public class Board {
 			Integer a = (newPos-1), b = (newPos+1);
 			if(squares.get(a.toString()).equals(opponentOf(sign)) || squares.get(b.toString()).equals(opponentOf(sign))) {
 				System.out.println("Attack on safe piece: "+ newPos);
-				// Retry
+				turnStatus = 0;
 			} else {
 				squares.put(newPos.toString(), sign);
 				squares.put(piece.toString(), opponentOf(sign));
+				turnStatus = 1;
 			}
 		}
 		// If square contains nothing
@@ -101,21 +136,20 @@ public class Board {
 			}			
 			if(jumpCount >= 3) {
 				System.out.println("Attempt to jump over blockade");
-				// Retry
+				turnStatus = 0;
 			} else {
 				// Place piece on empty square / RULE 1
 				squares.put(newPos.toString(), sign);
 				squares.put(piece.toString(), ".");
+				turnStatus = 1;
 			}
 		}
 		// If one of your own pieces occupies square
 		else if (squares.get(newPos.toString()).equals(sign)) {
-			System.out.println(sign);
-			System.out.println(squares.get(newPos.toString()));
 			System.out.println("One of your own pieces occupies square "+newPos);
-			// Retry
-		}	
-		print();
+			turnStatus = 0;
+		}
+		return turnStatus;
 	}
 	
 	public void moveSecondPiece(Integer n, String sign) {		
