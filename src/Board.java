@@ -29,32 +29,42 @@ public class Board {
 	
 	public void print() {
 		
-		// Top of the board
-		System.out.println("+----------+");
+		// Top of the scroll
+		System.out.println("                                                               .---.");
+		System.out.println("                                                              /  .  \\");
+		System.out.println("                                                             |\\_/|   |");
+		System.out.println("                                                             |   |  /|");
+		System.out.println("  .----------------------------------------------------------------' |");
+		System.out.println(" /  .-.                     S   E   N   E   T                        |");
+		System.out.println("|  /   \\                                                             |");
 		
 		// First row
-		System.out.print("|");
+		System.out.print("| |\\_.  |                       ");
 		for(Integer i = 1; i < 11; i++) {
 			System.out.print(squares.get(i.toString()));
 		}
-		System.out.println("|");
+		System.out.println("                           |");
 		
 		// Second row
-		System.out.print("|");
+		System.out.print("|\\|  |/ |                       ");
 		for(Integer i = 20; i > 10; i--) {
 			System.out.print(squares.get(i.toString()));
 		}
-		System.out.println("|");
+		System.out.println("                           |");
 		
 		// Third row
-		System.out.print("|");
+		System.out.print("| `---' |                       ");
 		for(Integer i = 21; i < 31; i++) {
 			System.out.print(squares.get(i.toString()));
 		}
-		System.out.println("|");
+		System.out.println("                           |");
 		
 		// Bottom of the board
-		System.out.println("+----------+");
+		System.out.println("|       |                                                           /"); 
+		System.out.println("|       |----------------------------------------------------------'");
+		System.out.println("\\       |");
+		System.out.println(" \\     /");
+		System.out.println("  `---'");
 		
 	}
 	
