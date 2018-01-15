@@ -60,7 +60,7 @@ public class Senet {
 		System.out.println(players.get(turn).getName() 
 				+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
 		if(!Main.CHEAT) Main.sc.nextLine();
-		Integer n = (Main.CHEAT) ? n = Integer.parseInt(Main.sc.nextLine()) : dice.throwSticks();
+		Integer n = (Main.CHEAT) ? n = Integer.parseInt(0 + Main.sc.nextLine()) : dice.throwSticks();
 		System.out.println(players.get(turn).getName() 
 				+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
 		board.moveSecondPiece(n, players.get(turn).getColorSign());
@@ -84,8 +84,7 @@ public class Senet {
 				System.out.println(players.get(turn).getName() 
 						+ " (" + players.get(turn).getColorSign() + "), press <ENTER> to throw the dice" );
 				if(!Main.CHEAT) Main.sc.nextLine();
-				Integer n = (Main.CHEAT) ? n = Integer.parseInt(Main.sc.nextLine()) : dice.throwSticks();
-				
+				Integer n = (Main.CHEAT) ? n = Integer.parseInt(0 + Main.sc.nextLine()) : dice.throwSticks();
 				System.out.println(players.get(turn).getName() 
 						+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
 				
@@ -96,9 +95,9 @@ public class Senet {
 					
 					// Choose piece to move
 					System.out.println(players.get(turn).getName() 
-							+ " (" + players.get(turn).getColorSign() + "), which piece do you want to move? Type 0 to pass" );
+							+ " (" + players.get(turn).getColorSign() + "), which piece do you want to move? Press <ENTER> to pass" );
 					System.out.print("-> ");
-					Integer piece = Integer.parseInt(Main.sc.nextLine());
+					Integer piece = Integer.parseInt(0 + Main.sc.nextLine());
 					
 					turnStatus = board.movePiece(n, piece, players.get(turn).getColorSign());
 				}
@@ -114,7 +113,8 @@ public class Senet {
 			}
 			switchTurn();
 		}
-		System.out.println("Congratulations, you win!");
+		switchTurn();
+		System.out.println("Congratulations " + players.get(turn).getName() + ", you win!");
 	}
 	
 	// Throw dice until someone throws 1

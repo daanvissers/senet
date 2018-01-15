@@ -56,11 +56,10 @@ public class Board {
 		
 	}
 	
+	// Moves the piece, according to the rules
 	public int movePiece(Integer n, Integer piece, String sign) {
 		
-		Integer target = n + piece;
-		
-		int turnStatus = 0;
+		Integer target = n + piece, turnStatus = 0;
 
 		// Choose to pass
 		if (piece == 0) {
@@ -184,7 +183,7 @@ public class Board {
 				break;
 			case "3": setMode3();
 				break;
-			default: System.out.println("Error!");
+			default:  setMode1();
 				break;
 		}
 	}
@@ -192,7 +191,7 @@ public class Board {
 	// Returns the opposing sign of the given sign
 	private String opponentOf(String sign) {
 		String opponentSign;
-		opponentSign = (sign == "x") ? "o" : "x";
+		opponentSign = (sign.equals("x")) ? "o" : "x";
 		return opponentSign;
 	}
 	
