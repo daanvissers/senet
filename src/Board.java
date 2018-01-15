@@ -5,26 +5,14 @@ public class Board {
 	private HashMap<String, String> squares;
 	
 	public Board() {
-		
 		squares = new HashMap<>();
 		fillBoard(squares);
-		
-	}
-
-	public HashMap<String, String> getSquares() {
-		return squares;
-	}
-
-	public void setSquares(HashMap<String, String> squares) {
-		this.squares = squares;
 	}
 	
 	private void fillBoard(HashMap<String, String> squares) {
-		
 		for(Integer i = 1; i <= 30; i++) {
 			squares.put(i.toString(), ".");
 		}
-		
 	}
 	
 	public void print() {
@@ -59,7 +47,7 @@ public class Board {
 		}
 		System.out.println("                           |");
 		
-		// Bottom of the board
+		// Bottom of the scroll
 		System.out.println("|       |                                                           /"); 
 		System.out.println("|       |----------------------------------------------------------'");
 		System.out.println("\\       |");
@@ -68,9 +56,9 @@ public class Board {
 		
 	}
 	
-	public int movePiece(Integer m, Integer piece, String sign) {
+	public int movePiece(Integer n, Integer piece, String sign) {
 		
-		Integer newPos = m + piece;
+		Integer target = n + piece;
 		
 		int turnStatus = 0;
 
@@ -84,7 +72,7 @@ public class Board {
 			System.out.println("You don't have a piece on square "+piece);
 		}
 		// If all pieces are on last row, allow square 30 / RULE 8
-		else if(newPos == 30) {
+		else if(target == 30) {
 			boolean won = true;
 			for(Integer i=1; i<=20; i++) {
 				if(squares.get(i.toString()).equals(sign)) {
@@ -99,6 +87,7 @@ public class Board {
 				}
 				if(lastRowPieces == 1) {
 					// Last piece lands on 30, so you win
+					squares.put(piece.toString(), ".");
 					turnStatus = 2;
 				} else {
 					// Remove piece from the board
@@ -109,12 +98,12 @@ public class Board {
 				turnStatus = 0;
 				System.out.println("Not all your pieces are on the final row");
 			}
-		} else if (newPos > 30) {
-			System.out.println("Illegal destination: "+newPos);
+		} else if (target > 30) {
+			System.out.println("Illegal destination: "+target);
 			turnStatus = 0;
 		}
 		// If square is a trap / RULE 3
-		else if(newPos == 27) {
+		else if(target == 27) {
 			System.out.println("It's a trap!");
 			boolean placed = false;
 			Integer begin = 1;
@@ -130,17 +119,17 @@ public class Board {
 			}
 		}
 		// If square contains opponent, swap them / RULE 2
-		else if(squares.get(newPos.toString()).equals(opponentOf(sign))) {
+		else if(squares.get(target.toString()).equals(opponentOf(sign))) {
 			// If two next to each other, cancel / RULE 5
-			Integer a = (newPos-1), b = (newPos+1);
+			Integer a = (target-1), b = (target+1);
 			if(squares.get(a.toString()).equals(opponentOf(sign)) || squares.get(b.toString()).equals(opponentOf(sign))) {
-				System.out.println("Attack on safe piece: "+ newPos);
+				System.out.println("Attack on safe piece: "+ target);
 				turnStatus = 0;
 			} else {
 				// Swap them
-				if(newPos != 26 && newPos != 28 && newPos != 29) {
+				if(target != 26 && target != 28 && target != 29) {
 					turnStatus = 1;
-					squares.put(newPos.toString(), sign);
+					squares.put(target.toString(), sign);
 					squares.put(piece.toString(), opponentOf(sign));
 				} else {
 					turnStatus = 0;
@@ -149,10 +138,10 @@ public class Board {
 			}
 		}
 		// If square contains nothing
-		else if(squares.get(newPos.toString()).equals(".")) {
+		else if(squares.get(target.toString()).equals(".")) {
 			// If jump over 3 opponent pieces / RULE 6
 			int jumpCount = 0;
-			for(Integer i = piece; i < newPos; i++) {
+			for(Integer i = piece; i < target; i++) {
 				if(squares.get(i.toString()).equals(opponentOf(sign))) jumpCount++;
 			}			
 			if(jumpCount >= 3) {
@@ -160,35 +149,27 @@ public class Board {
 				turnStatus = 0;
 			} else {
 				// Place piece on empty square / RULE 1
-				squares.put(newPos.toString(), sign);
+				squares.put(target.toString(), sign);
 				squares.put(piece.toString(), ".");
 				turnStatus = 1;
 			}
 		}
 		// If one of your own pieces occupies square
-		else if (squares.get(newPos.toString()).equals(sign)) {
-			System.out.println("One of your own pieces occupies square "+newPos);
+		else if (squares.get(target.toString()).equals(sign)) {
+			System.out.println("One of your own pieces occupies square "+target);
 			turnStatus = 0;
 		}
 		return turnStatus;
 	}
 	
 	public void moveSecondPiece(Integer n, String sign) {		
-		Integer i = 30;
-		boolean finished = false;
-		while(!finished) {
-			Integer pos = 9 + n;
-			// If square contains opponent, swap them
-			if(!squares.get(pos.toString()).equals(sign) && !squares.get(pos.toString()).equals(".")) {
-				squares.put(pos.toString(), sign);
-				squares.put("9", opponentOf(sign));
-				finished = true;
-			} else if (squares.get(pos.toString()).equals(".")) {
-				squares.put(pos.toString(), sign);
-				squares.put("9", ".");
-				finished = true;
-			}
-			i--;
+		Integer pos = 9 + n;
+		if(squares.get(pos.toString()).equals(".")) {
+			squares.put(pos.toString(), sign);
+			squares.put("9", ".");
+		} else {
+			squares.put(pos.toString(), sign);
+			squares.put("9", opponentOf(sign));
 		}
 		print();
 	}
@@ -226,6 +207,7 @@ public class Board {
 				squares.put(x.toString(), "x");
 			}
 		}
+		print();
 	}
 	
 	private void setMode1() {

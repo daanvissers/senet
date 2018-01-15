@@ -7,14 +7,6 @@ public class Senet {
 	private Dice dice;
 	private int turn;
 	
-	public Senet() {
-		
-		players = new ArrayList<>();
-		dice = new Dice();
-		board = new Board();
-		
-	}
-	
 	public void play() {
 		
 		// Ask which game mode should be played
@@ -23,9 +15,9 @@ public class Senet {
 				+ "a normal game (0) or a test position (1-3)?");
 		String mode = Main.sc.nextLine();
 		
+		// Ask for player names
 		String p1name = null, p2name = null;
 		if(mode.equals("0")) {
-			// Ask for player names
 			System.out.println("Enter the name of the first player:");
 			p1name = Main.sc.nextLine();
 			
@@ -40,6 +32,11 @@ public class Senet {
 	}
 
 	private void createGame(String mode, String p1name, String p2name) {
+		
+		players = new ArrayList<>();
+		dice = new Dice();
+		board = new Board();
+		
 		switch(mode) {
 			case "0": this.players.add(new Player());
 					  this.players.add(new Player());
@@ -58,7 +55,6 @@ public class Senet {
 		
 		// Set pieces on the board, and print
 		board.setPieces("0");
-		board.print();
 		
 		// Do the second move
 		System.out.println(players.get(turn).getName() 
@@ -67,7 +63,6 @@ public class Senet {
 		Integer n = (Main.CHEAT) ? n = Integer.parseInt(Main.sc.nextLine()) : dice.throwSticks();
 		System.out.println(players.get(turn).getName() 
 				+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
-
 		board.moveSecondPiece(n, players.get(turn).getColorSign());
 		switchTurn();
 	}
@@ -77,12 +72,12 @@ public class Senet {
 		// Set the pieces on the board
 		if(!mode.equals("0")) board.setPieces(mode);
 		
-		// gameState: 0 == turn is not complete, 1 == turn is completed, 
-		// 			  2 == game has been won,    4 == pass
-		int gameState = 0;
+		// turnStatus: 0 == turn is not complete, 1 == turn is completed, 
+		// 			   2 == winning turn,         4 == pass
+		int turnStatus = 0;
 		
 		// While the game hasn't been won
-		while(gameState != 2) {
+		while(turnStatus != 2) {
 			boolean throwAgain = true;
 			while(throwAgain) {
 				// Throw dice
@@ -94,39 +89,38 @@ public class Senet {
 				System.out.println(players.get(turn).getName() 
 						+ " (" + players.get(turn).getColorSign() + "), you have thrown " + n);
 				
-				gameState = 0;
+				turnStatus = 0;
 				
 				// While a turn is not complete
-				while(gameState == 0) {
+				while(turnStatus == 0) {
 					
 					// Choose piece to move
 					System.out.println(players.get(turn).getName() 
-							+ " (" + players.get(turn).getColorSign() + "), which piece do you want to move?" );
-					System.out.println("Type 0 to pass");
+							+ " (" + players.get(turn).getColorSign() + "), which piece do you want to move? Type 0 to pass" );
 					System.out.print("-> ");
 					Integer piece = Integer.parseInt(Main.sc.nextLine());
 					
-					gameState = board.movePiece(n, piece, players.get(turn).getColorSign());
+					turnStatus = board.movePiece(n, piece, players.get(turn).getColorSign());
 				}
 				
-				board.print();
-				
 				// Decide if player can make another throw
-				if(gameState != 2 && gameState != 4) {
+				if(turnStatus != 2 && turnStatus != 4) {
 					throwAgain = (n == 1 || n == 4 || n == 6) ? true : false;
 				} else {
 					throwAgain = false;
 				}
+				
+				board.print();
 			}
 			switchTurn();
 		}
-		System.out.println("Congratulations, you've won!");
+		System.out.println("Congratulations, you win!");
 	}
 	
+	// Throw dice until someone throws 1
 	private void determineStarter(String name1, String name2) {
 		
-		boolean decided = false;
-		boolean turnTaker = false;
+		boolean decided = false, turnTaker = false;
 		int n = 0;
 		String name = "", nameOpponent = "";
 		while(!decided) {
