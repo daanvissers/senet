@@ -57,20 +57,12 @@ public class Board {
 	}
 	
 	// Moves the piece, according to the rules
-	public int movePiece(Integer n, Integer piece, String sign, boolean backward) {
+	public int movePiece(Integer n, Integer piece, String sign) {
 		
-		Integer target = 0, turnStatus = 0;
-		if(backward) {
-			target = piece - n;
-		} else {
-			target = n + piece;
-		}
+		Integer target = n + piece, turnStatus = 0;
 
 		// Choose to pass
-		if(piece == 0) {
-			System.out.println("You choose to pass");
-			turnStatus = 4;
-		}
+		if(piece == 0) turnStatus = 4;
 		// If you don't have a piece on the square
 		else if(!squares.get(piece.toString()).equals(sign)) {
 			System.out.println("You don't have a piece on square "+piece);
@@ -188,6 +180,8 @@ public class Board {
 				break;
 			case "3": setMode3();
 				break;
+			case "4": setMode4();
+				break;
 			default:  setMode1();
 				break;
 		}
@@ -243,15 +237,19 @@ public class Board {
 		print();
 	}
 	
-	// Return how many options you have
-	public int countOptions(Integer n, Integer piece, String sign, boolean backward) {
-		
-		Integer target = 0, options = 0;;
-		if(backward) {
-			target = piece - n;
-		} else {
-			target = n + piece;
+	private void setMode4() {
+		String[] number = {"24", "13", "18", "22", "25", "26", "28", "29" };
+		String[] symbol = {"o", "x", "o", "o", "x", "x", "x", "x"};
+		for(int i = 0; i < 8; i++) {
+			squares.put(number[i], symbol[i]);
 		}
+		print();
+	}
+	
+	// Return how many options you have
+	public int countOptions(Integer n, Integer piece, String sign) {
+		
+		Integer target = n + piece, options = 0;
 		
 		if(target > 30) {
 			options = 0;
@@ -264,29 +262,15 @@ public class Board {
 					won = false;
 				}
 			}
-			if(won) {
-				// Check if the last row contains any pieces
-				int lastRowPieces = 0;
-				for(Integer i=21; i<=30; i++) {
-					if(squares.get(i.toString()).equals(sign)) lastRowPieces++;
-				}
-				if(lastRowPieces == 1) {
-					options++;
-				} else {
-					options++;
-				}
-			}
+			if(won) options++;
 		}
 		// If square is a trap / RULE 3
-		else if(target == 27) {
-			options++;
-		}
+		else if(target == 27) options++;
 		// If square contains opponent, swap them / RULE 2
 		else if(squares.get(target.toString()).equals(opponentOf(sign))) {
 			// If two next to each other, cancel / RULE 5
 			Integer a = (target-1), b = (target+1);
 			if(squares.get(a.toString()).equals(opponentOf(sign)) || squares.get(b.toString()).equals(opponentOf(sign))) {
-
 			} else {
 				if(target != 26 && target != 28 && target != 29) {
 					options++;
@@ -300,11 +284,7 @@ public class Board {
 			for(Integer i = piece; i < target; i++) {
 				if(squares.get(i.toString()).equals(opponentOf(sign))) jumpCount++;
 			}			
-			if(jumpCount >= 3) {
-
-			} else {
-				options++;
-			}
+			if(jumpCount < 3) options++;
 		}
 		return options;
 	}
