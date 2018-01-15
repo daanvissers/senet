@@ -74,8 +74,13 @@ public class Board {
 		
 		int turnStatus = 0;
 
+		// Choose to pass
+		if (piece == 0) {
+			System.out.println("You choose to pass");
+			turnStatus = 4;
+		}
 		// If you don't have a piece on the square
-		if(!squares.get(piece.toString()).equals(sign)) {
+		else if(!squares.get(piece.toString()).equals(sign)) {
 			System.out.println("You don't have a piece on square "+piece);
 		}
 		// If all pieces are on last row, allow square 30 / RULE 8
@@ -132,9 +137,15 @@ public class Board {
 				System.out.println("Attack on safe piece: "+ newPos);
 				turnStatus = 0;
 			} else {
-				squares.put(newPos.toString(), sign);
-				squares.put(piece.toString(), opponentOf(sign));
-				turnStatus = 1;
+				// Swap them
+				if(newPos != 26 && newPos != 28 && newPos != 29) {
+					turnStatus = 1;
+					squares.put(newPos.toString(), sign);
+					squares.put(piece.toString(), opponentOf(sign));
+				} else {
+					turnStatus = 0;
+					System.out.println("The piece on this square is invincible!");
+				}
 			}
 		}
 		// If square contains nothing

@@ -77,7 +77,8 @@ public class Senet {
 		// Set the pieces on the board
 		if(!mode.equals("0")) board.setPieces(mode);
 		
-		// gameState: 0 == turn is not complete, 1 == turn is completed, 2 == game has been won
+		// gameState: 0 == turn is not complete, 1 == turn is completed, 
+		// 			  2 == game has been won,    4 == pass
 		int gameState = 0;
 		
 		// While the game hasn't been won
@@ -101,6 +102,7 @@ public class Senet {
 					// Choose piece to move
 					System.out.println(players.get(turn).getName() 
 							+ " (" + players.get(turn).getColorSign() + "), which piece do you want to move?" );
+					System.out.println("Type 0 to pass");
 					System.out.print("-> ");
 					Integer piece = Integer.parseInt(Main.sc.nextLine());
 					
@@ -110,7 +112,7 @@ public class Senet {
 				board.print();
 				
 				// Decide if player can make another throw
-				if(gameState != 2) {
+				if(gameState != 2 && gameState != 4) {
 					throwAgain = (n == 1 || n == 4 || n == 6) ? true : false;
 				} else {
 					throwAgain = false;
