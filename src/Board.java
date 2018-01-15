@@ -57,12 +57,17 @@ public class Board {
 	}
 	
 	// Moves the piece, according to the rules
-	public int movePiece(Integer n, Integer piece, String sign) {
+	public int movePiece(Integer n, Integer piece, String sign, boolean backward) {
 		
-		Integer target = n + piece, turnStatus = 0;
+		Integer target = 0, turnStatus = 0;
+		if(backward) {
+			target = piece - n;
+		} else {
+			target = n + piece;
+		}
 
 		// Choose to pass
-		if (piece == 0) {
+		if(piece == 0) {
 			System.out.println("You choose to pass");
 			turnStatus = 4;
 		}
@@ -236,6 +241,76 @@ public class Board {
 			squares.put(number[i], symbol[i]);
 		}
 		print();
+	}
+	
+	// Return how many options you have
+	public int countOptions(Integer n, Integer piece, String sign, boolean backward) {
+		
+		Integer target = 0, options = 0;;
+		if(backward) {
+			target = piece - n;
+		} else {
+			target = n + piece;
+		}
+		
+		if(target > 30) {
+			options = 0;
+		}
+		// If all pieces are on last row, allow square 30 / RULE 8
+		else if(target == 30) {
+			boolean won = true;
+			for(Integer i=1; i<=20; i++) {
+				if(squares.get(i.toString()).equals(sign)) {
+					won = false;
+				}
+			}
+			if(won) {
+				// Check if the last row contains any pieces
+				int lastRowPieces = 0;
+				for(Integer i=21; i<=30; i++) {
+					if(squares.get(i.toString()).equals(sign)) lastRowPieces++;
+				}
+				if(lastRowPieces == 1) {
+					options++;
+				} else {
+					options++;
+				}
+			}
+		}
+		// If square is a trap / RULE 3
+		else if(target == 27) {
+			options++;
+		}
+		// If square contains opponent, swap them / RULE 2
+		else if(squares.get(target.toString()).equals(opponentOf(sign))) {
+			// If two next to each other, cancel / RULE 5
+			Integer a = (target-1), b = (target+1);
+			if(squares.get(a.toString()).equals(opponentOf(sign)) || squares.get(b.toString()).equals(opponentOf(sign))) {
+
+			} else {
+				if(target != 26 && target != 28 && target != 29) {
+					options++;
+				}
+			}
+		}
+		// If square contains nothing
+		else if(squares.get(target.toString()).equals(".")) {
+			// If jump over 3 opponent pieces / RULE 6
+			int jumpCount = 0;
+			for(Integer i = piece; i < target; i++) {
+				if(squares.get(i.toString()).equals(opponentOf(sign))) jumpCount++;
+			}			
+			if(jumpCount >= 3) {
+
+			} else {
+				options++;
+			}
+		}
+		return options;
+	}
+	
+	public HashMap<String, String> getSquares() {
+		return this.squares;
 	}
 
 }

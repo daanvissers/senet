@@ -93,13 +93,45 @@ public class Senet {
 				// While a turn is not complete
 				while(turnStatus == 0) {
 					
-					// Choose piece to move
-					System.out.println(players.get(turn).getName() 
-							+ " (" + players.get(turn).getColorSign() + "), which piece do you want to move? Press <ENTER> to pass" );
-					System.out.print("-> ");
-					Integer piece = Integer.parseInt(0 + Main.sc.nextLine());
+					// Count how many options you have. Normally you do NOT move backwards
+					boolean backwards = false;
+					Integer options = 0, piece = 0;
+					for(Integer i=1; i<=30; i++) {
+						if(board.getSquares().get( i.toString() ).equals(players.get(turn).getColorSign())) {
+							options = options + board.countOptions(n, i, players.get(turn).getColorSign(), false);
+						}
+					}
+					// If you don't have options, check backwards
+					if(options == 0) {
+						System.out.println("You do not have any options. ");
+						// Check if you have any options if you move backwards
+						for(Integer i=1; i<=30; i++) {
+							if(board.getSquares().get( i.toString() ).equals(players.get(turn).getColorSign())) {
+								options = options + board.countOptions(n, i, players.get(turn).getColorSign(), true);
+							}
+						}
+						if(options == 0) {
+							System.out.println("You can't move backwards either. Switching turns");
+							turnStatus = 4;
+						} else {
+							// Else, you can move backwards
+							System.out.println("But you can try moving backwards");
+							backwards = true;
+						}
+					}
 					
-					turnStatus = board.movePiece(n, piece, players.get(turn).getColorSign());
+					// If you're not passing (turnStatus 4)
+					if(turnStatus != 4) {
+						// Choose piece to move
+						System.out.println(players.get(turn).getName() 
+								+ " (" + players.get(turn).getColorSign() + "), which piece do you want to move?" );
+						System.out.print("-> ");
+						piece = Integer.parseInt(0 + Main.sc.nextLine());
+					}
+						
+						
+					// Move the piece, backwards or forwards depending on the check above
+					turnStatus = board.movePiece(n, piece, players.get(turn).getColorSign(), backwards);
 				}
 				
 				// Decide if player can make another throw
